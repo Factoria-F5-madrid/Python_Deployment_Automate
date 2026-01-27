@@ -616,7 +616,7 @@ Agregamos nuestras variables de entorno:
 
 Categorias:
 
-![alt text](image.png)
+![alt text](./assets/test1.png)
 
 ```bash
 {
@@ -625,7 +625,7 @@ Categorias:
 ```
 Libros:
 
-![alt text](image-1.png)
+![alt text](./assets/test2.png)
 
 ```bash
 {
