@@ -327,7 +327,7 @@ REST_FRAMEWORK = {
 
 1. **Crear un archivo llamado `Dockefile` en la raíz del proyecto:**:
 
-```docker
+```dockerfile
 # Usa la imagen base de Python 3.12 en su versión "slim" (más liviana)
 # "slim" significa que viene con menos paquetes preinstalados para reducir el tamaño
 FROM python:3.12-slim
@@ -400,34 +400,33 @@ COPY . .
 
 # Informa que el contenedor expondrá el puerto 8000
 # Esto es solo documentación - no abre el puerto automáticamente
-EXPOSE 8010
+EXPOSE 8000
 
 # Comando que se ejecutará cuando el contenedor inicie
-# Inicia el servidor de desarrollo de Django en el puerto 8010
+# Inicia el servidor de desarrollo de Django en el puerto 8000
 # 0.0.0.0 permite conexiones desde cualquier IP (necesario para Docker)
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8010"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ```
 
 
 2. **Crear un archivo llamado `docker-compose.yml` en la raíz del proyecto:**:
 
-```docker
+```yml
 # Especifica la versión del formato de docker-compose a usar
 version: '3.8'
 
 # Define los servicios (contenedores) que componen la aplicación
 services:
-  
-  # Servicio para la aplicación web Django
+
+ # Servicio para la aplicación web Django
   web:
-    # Construye la imagen usando el Dockerfile en el directorio actual (.)
+   # Construye la imagen usando el Dockerfile en el directorio actual (.)
     build: .
-    
     # Mapeo de puertos: puerto_host:puerto_contenedor
-    # Puerto 8000 de tu máquina → Puerto 8010 del contenedor
+    # Puerto 8000 de tu máquina → Puerto 8000 del contenedor
     ports:
-      - "8000:8010"
-    
+      - "8000:8000"
+
     # Monta volúmenes: directorio_host:directorio_contenedor
     # El directorio actual (.) se monta en /app dentro del contenedor
     # Permite ver cambios en tiempo real sin reconstruir la imagen
@@ -436,48 +435,23 @@ services:
     
     # Variables de entorno que estarán disponibles dentro del contenedor
     environment:
-      - DEBUG=1                    # Activa el modo debug de Django
-      - DB_NAME=${DB_NAME}         # Nombre de la base de datos (desde .env.docker)
-      - DB_USER=${DB_USER}         # Usuario de la base de datos (desde .env.docker)
-      - DB_PASSWORD=${DB_PASSWORD} # Contraseña de la base de datos (desde .env.docker)
-      - DB_HOST=db                 # Host de la base de datos (nombre del servicio MySQL)
-      - DB_PORT=3306               # Puerto de MySQL (puerto estándar)
-    
-    # Define dependencias: este servicio espera a que 'db' esté disponible
-    depends_on:
-      - db  # El contenedor web esperará a que el contenedor db esté corriendo
-    
-    # Archivo adicional de variables de entorno
-    # Las variables en este archivo estarán disponibles en el contenedor
+      - DEBUG=1
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+     # Variables de entorno específicas para configurar MySQL
     env_file:
       - .env.docker
-
-  # Servicio para la base de datos MySQL
-  db:
-    # Usa la imagen oficial de MySQL versión 8 desde Docker Hub
-    image: mysql:8
     
-    # Variables de entorno específicas para configurar MySQL
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}        # Crea automáticamente esta base de datos
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Establece la contraseña del usuario root
-    
-    # Mapeo de puertos para MySQL
-    # Puerto 3307 de tu máquina → Puerto 3306 del contenedor
-    # Usa 3307 para evitar conflictos si tienes MySQL local en 3306
-    ports:
-      - "3307:3306"
-    
-    # Volumen persistente para los datos de MySQL
-    # Los datos se guardan en el volumen 'mysql_data' para que persistan
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-# Define volúmenes con nombre que pueden ser reutilizados
-volumes:
-  # Volumen persistente para almacenar los datos de MySQL
-  # Los datos sobrevivirán aunque se eliminen los contenedores
-  mysql_data:
+    # Comandos a ejecutar una vez el contenedor está levantado
+    command: >
+      sh -c "
+        echo 'Iniciando aplicación Django...' &&
+        python manage.py runserver 0.0.0.0:8000
+      "
 ```
 
 3. **Construir y ejecutar los contenedores:**
@@ -541,15 +515,14 @@ Estos son los pasos para construir tu imagen de Docker, subirla a Docker Hub y l
 
 1.  **Construir la imagen Docker:**
     Este comando utiliza el `Dockerfile` en el directorio actual (`.`) para construir una nueva imagen.
-    - `-t alexandrazambrano/django-crud-api:latest`: Asigna un "tag" o etiqueta a la imagen. El formato es `tu-usuario/nombre-de-la-imagen:version`. Esto la prepara para subirla a tu repositorio en Docker Hub.
+    - `-t alexandrazambrano/django-crud-api:v1`: Asigna un "tag" o etiqueta a la imagen. El formato es `tu-usuario/nombre-de-la-imagen:version`. Esto la prepara para subirla a tu repositorio en Docker Hub.
 
     ```bash
-    docker build -t alexandrazambrano/django-crud-api:latest .
+    docker build -t <tu-usuario>/<nombre-de-la-imagen>:<version> .
     ```
 
 2.  **Hacer login en Docker Hub:**
     Inicia sesión en tu cuenta de Docker Hub. Necesitarás reemplazar `<username>` con tu nombre de usuario. Es un requisito para poder subir imágenes.
-    **Nota de seguridad:** Es más seguro omitir la contraseña en el comando para que se te solicite de forma interactiva, o usar un token de acceso.
 
     ```bash
     docker login -u <username>
@@ -559,7 +532,7 @@ Estos son los pasos para construir tu imagen de Docker, subirla a Docker Hub y l
     Este comando publica la imagen que construiste en el repositorio de Docker Hub que especificaste con el tag. Una vez subida, estará disponible públicamente (o de forma privada, según la configuración de tu repositorio).
 
     ```bash
-    docker push alexandrazambrano/django-crud-api:latest
+    docker push <tu-usuario>/<nombre-de-la-imagen>:<version>
     ```
 
 4.  **Verificar localmente:**
