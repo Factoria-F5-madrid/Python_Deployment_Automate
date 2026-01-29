@@ -110,16 +110,6 @@ DB_HOST=localhost  # o la dirección de tu servidor de base de datos
 DB_PORT=3306       # o el puerto que uses (por defecto es 3306 para MySQL)
 ```
 
-Y ahora creamos otro archivo  `.env.docker`
-
-```env
-DB_NAME=nombre_base_de_datos
-DB_USER=usuario
-DB_PASSWORD=contraseña
-DB_HOST=db  # debe referenciar al servicio que creadp en docker
-DB_PORT=3306       # o el puerto que uses (por defecto es 3306 para MySQL)
-```
-
 También puedes crear un archivo `.env.example` con la estructura que ves arriba.
 
 
@@ -564,9 +554,9 @@ Buscamos la vista pública:
 
 ![alt text](./assets/image-6.png)
 
-copiamos la url:
+copiamos el nombre de nuestra imagen y su etiqueta:
 
-![alt text](./assets/image-7.png)
+![alt text](./assets/dockerhub-image-link.png)
 
 Agregamos nuestra imagen:
 
@@ -584,6 +574,10 @@ Bajamos un poco más, y seleccionamos el plan gratuito:
 Agregamos nuestras variables de entorno:
 
 ![alt text](./assets/image-11.png)
+
+Iniciamos el deploy:
+
+![alt text](./assets/deploy-render.PNG)
 
 ## Crea un categorias y libros con curl
 
