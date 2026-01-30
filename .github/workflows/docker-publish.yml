@@ -3,7 +3,7 @@ name: Publicar Imagen de Docker en Docker Hub
 # Este flujo de trabajo se ejecuta cada vez que hay un push a la rama 'main'
 on:
   push:
-    branches: [ main ]
+    branches: [ ci-cd-django-restf ]
 
 jobs:
   build-and-push:
@@ -28,4 +28,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-server-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/python_deployment_automate:v1
