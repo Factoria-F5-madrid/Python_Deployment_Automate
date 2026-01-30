@@ -505,7 +505,7 @@ Estos son los pasos para construir tu imagen de Docker, subirla a Docker Hub y l
 
 1.  **Construir la imagen Docker:**
     Este comando utiliza el `Dockerfile` en el directorio actual (`.`) para construir una nueva imagen.
-    - `-t alexandrazambrano/django-crud-api:v1`: Asigna un "tag" o etiqueta a la imagen. El formato es `tu-usuario/nombre-de-la-imagen:version`. Esto la prepara para subirla a tu repositorio en Docker Hub.
+    - `-t alexandrazambrano/django-crud-api:latest`: Asigna un "tag" o etiqueta a la imagen. El formato es `tu-usuario/nombre-de-la-imagen:version`. Esto la prepara para subirla a tu repositorio en Docker Hub.
 
     ```bash
     docker build -t <tu-usuario>/<nombre-de-la-imagen>:<version> .
