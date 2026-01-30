@@ -24,7 +24,15 @@ El flujo de trabajo de GitHub Actions necesita credenciales para iniciar sesión
 6.  **¡Importante!** Copiamos el token y lo guardamos en un lugar seguro. No podremos volver a verlo después de cerrar esta ventana.
 ![alt text](./assets/token.PNG)
 
-## Paso 2: Configurar los Secrets en el Repositorio de GitHub
+## Paso 2: Tomar el hook de deploy de render
+
+1. Nos vamos a render donde nuestro servicio se estpa ejecutando y nos dirigimos a `settings`:
+
+![alt text](./assets/hook.PNG)
+
+Este token lo copiamos para guardarlo como secreto en nuestro repositorio, este hook es el que nos permitirá que el deploy se dispare cada que haya un cambio en el action de manera exitosa.
+
+## Paso 3: Configurar los Secrets en el Repositorio de GitHub
 
 Ahora, vamos a almacenar de forma segura nuestro nombre de usuario y el token de acceso en nuestro repositorio de GitHub.
 
@@ -34,9 +42,11 @@ Ahora, vamos a almacenar de forma segura nuestro nombre de usuario y el token de
 2.  Hacemos clic en **New repository secret** para agregar los siguientes dos secretos:
     *   **`DOCKERHUB_USERNAME`**: Nuestro nombre de usuario de Docker Hub.
     *   **`DOCKERHUB_TOKEN`**: El token de acceso que generamos en el paso anterior.
+    *   **`RENDER_DEPLOY_HOOK`**: El hook que copiamos de render.
 ![alt text](./assets/rep-s.PNG)
 ![alt text](./assets/us.PNG)
 ![alt text](./assets/tok.PNG)
+![alt text](./assets/ren-h..PNG)
 
 ## Paso 3: Crear el Flujo de Trabajo (Workflow) de GitHub Actions
 
