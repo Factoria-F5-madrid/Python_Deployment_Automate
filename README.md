@@ -1,6 +1,6 @@
 # CI/CD: Publicación automática de la imagen en Docker Hub con GitHub Actions
 
-En esta guía, configuraremos un flujo de trabajo de Integración Continua y Despliegue Continuo (CI/CD) utilizando GitHub Actions. El objetivo es automatizar la construcción y publicación de nuestra imagen de Docker en Docker Hub cada vez que realicemos un `push` a la rama `main`.
+En esta guía, configuraremos un flujo de trabajo de Integración Continua y Despliegue Continuo (CI/CD) utilizando GitHub Actions. El objetivo es automatizar la construcción y publicación de nuestra imagen de Docker en Docker Hub cada vez que realicemos un `push` a la rama `main` u otra que definamos, en este caso `ci-cd-django-restf`.
 
 ## Prerrequisitos
 
@@ -14,19 +14,29 @@ El flujo de trabajo de GitHub Actions necesita credenciales para iniciar sesión
 
 1.  Iniciamos sesión en Docker Hub.
 2.  Vamos a **Account Settings** -> **Personal access tokens**.
+![alt text](./assets/acc-settings.PNG)
+![alt text](./assets/acc-token.PNG)
 3.  Hacemos clic en **Generate New Token**.
+![alt text](./assets/acc-gen.PNG)
 4.  Le damos un nombre descriptivo (por ejemplo, `github-actions-token`) y le asignamos permisos de **Read, Write & Delete**.
+![alt text](./assets/acc-cre.PNG)
 5.  Hacemos clic en **Generate**.
 6.  **¡Importante!** Copiamos el token y lo guardamos en un lugar seguro. No podremos volver a verlo después de cerrar esta ventana.
+![alt text](./assets/token.PNG)
 
 ## Paso 2: Configurar los Secrets en el Repositorio de GitHub
 
 Ahora, vamos a almacenar de forma segura nuestro nombre de usuario y el token de acceso en nuestro repositorio de GitHub.
 
 1.  En el repositorio, vamos a **Settings** -> **Secrets and variables** -> **Actions**.
+![alt text](./assets/sett.PNG)
+![alt text](./assets/sv.PNG)
 2.  Hacemos clic en **New repository secret** para agregar los siguientes dos secretos:
     *   **`DOCKERHUB_USERNAME`**: Nuestro nombre de usuario de Docker Hub.
     *   **`DOCKERHUB_TOKEN`**: El token de acceso que generamos en el paso anterior.
+![alt text](./assets/rep-s.PNG)
+![alt text](./assets/us.PNG)
+![alt text](./assets/tok.PNG)
 
 ## Paso 3: Crear el Flujo de Trabajo (Workflow) de GitHub Actions
 
@@ -42,7 +52,7 @@ name: Publicar Imagen de Docker en Docker Hub
 # Este flujo de trabajo se ejecuta cada vez que hay un push a la rama 'main'
 on:
   push:
-    branches: [ main ]
+    branches: [ ci-cd-django-restf ]
 
 jobs:
   build-and-push:
@@ -67,7 +77,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-server-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/python_deployment_automate:v1
 ```
 
 ### Explicación del Flujo de Trabajo
