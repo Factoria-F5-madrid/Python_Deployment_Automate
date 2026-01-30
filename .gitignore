@@ -38,3 +38,7 @@ wheels/
 # OS
 .DS_Store
 Thumbs.db
+
+# Archivos de docker
+docker-compose.yml
+Dockerfile
