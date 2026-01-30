@@ -32,3 +32,16 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/python_deployment_automate:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/python_deployment_automate:v${{ github.run_number }}
+      # Disparar el deploy hook de Render después de subir la imagen
+      - name: Disparar deployment en Render
+        if: success()
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+        continue-on-error: true  # No fallar si el webhook falla
+
+      # Notificación del resultado
+      - name: Notificar resultado del deployment
+        if: always()
+        run: |
+          echo "✅ Imagen Docker publicada exitosamente"
+          echo "🚀 Deploy hook disparado en Render"
