@@ -23,9 +23,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # 3. Construimos la imagen y la publicamos
+      # Agregar múltiples tags incluyendo latest
       - name: Construir y publicar la imagen de Docker
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/python_deployment_automate:v1
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/python_deployment_automate:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/python_deployment_automate:v${{ github.run_number }}
