@@ -52,7 +52,7 @@ name: Publicar Imagen de Docker en Docker Hub
 # Este flujo de trabajo se ejecuta cada vez que hay un push a la rama 'main'
 on:
   push:
-    branches: [ ci-cd-django-restf ]
+    branches: [ main ]
 
 jobs:
   build-and-push:
