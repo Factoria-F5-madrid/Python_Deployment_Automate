@@ -1,0 +1,40 @@
+# Especifica la versión del formato de docker-compose a usar
+version: '3.8'
+
+# Define los servicios (contenedores) que componen la aplicación
+services:
+
+ # Servicio para la aplicación web Django
+  web:
+   # Construye la imagen usando el Dockerfile en el directorio actual (.)
+    build: .
+    # Mapeo de puertos: puerto_host:puerto_contenedor
+    # Puerto 8000 de tu máquina → Puerto 8000 del contenedor
+    ports:
+      - "8000:8000"
+
+    # Monta volúmenes: directorio_host:directorio_contenedor
+    # El directorio actual (.) se monta en /app dentro del contenedor
+    # Permite ver cambios en tiempo real sin reconstruir la imagen
+    volumes:
+      - .:/app
+    
+    # Variables de entorno que estarán disponibles dentro del contenedor
+    environment:
+      - DEBUG=1
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+     # Variables de entorno específicas para configurar MySQL
+    env_file:
+      - .env.docker
+    
+    # Comandos a ejecutar una vez el contenedor está levantado
+    command: >
+      sh -c "
+        echo 'Iniciando aplicación Django...' &&
+        python manage.py runserver 0.0.0.0:8000
+      "
